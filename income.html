@@ -80,6 +80,9 @@
     <label>貸款年限（年）</label>
     <input type="number" id="loanYears" placeholder="例如：30">
 
+    <label>貸款成數（%）</label>
+    <input type="number" id="loanRatePercent" placeholder="例如：70" value="70" step="1">
+
     <button onclick="calculateAffordability()">計算可負擔房價</button>
 
     <div class="result" id="resultBox" style="display:none;">
@@ -94,25 +97,23 @@
       const income = parseFloat(document.getElementById('monthlyIncome').value);
       const loanRate = parseFloat(document.getElementById('loanRate').value) / 100;
       const years = parseFloat(document.getElementById('loanYears').value);
+      const loanRatePercent = parseFloat(document.getElementById('loanRatePercent').value) / 100;
 
-      if (!income || !loanRate || !years) return;
+      if (!income || !loanRate || !years || !loanRatePercent) return;
 
       const fixedRatio = personType === 'personal' ? 0.4 : 0.6;
       const availableMonthly = income * (1 - fixedRatio);
 
-      // 月付 1 萬可貸款多少？用年利率 + 30 年試算的公式
       const r = loanRate / 12;
       const n = years * 12;
-      const monthlyPerMillion = 10000 * r / (1 - Math.pow(1 + r, -n));
 
-      const loanAffordable = availableMonthly * 1000000 / monthlyPerMillion;
-      const estimatedTotal = loanAffordable / 0.7; // 假設貸款 70%
+      const loanAffordable = availableMonthly * (1 - Math.pow(1 + r, -n)) / r;
+      const estimatedTotal = loanAffordable / loanRatePercent;
 
-      document.getElementById('availableLoan').innerText = `📊 預估你可貸金額：約 NT$${Math.round(loanAffordable).toLocaleString()} 元`;
+      document.getElementById('availableLoan').innerText = `📈 預估你可貸金額：約 NT$${Math.round(loanAffordable).toLocaleString()} 元`;
       document.getElementById('estimatedTotalPrice').innerText = `🏠 推估可負擔總房價：約 NT$${Math.round(estimatedTotal).toLocaleString()} 元（含貸款＋自備）`;
       document.getElementById('resultBox').style.display = 'block';
     }
   </script>
 </body>
 </html>
-
