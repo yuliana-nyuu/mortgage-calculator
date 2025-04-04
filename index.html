@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>房貸試算小工具</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f9f9f9;
+      color: #333;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #2b2b2b;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-top: 0.25rem;
+    }
+    .result {
+      margin-top: 2rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .result p {
+      margin: 0.5rem 0;
+      font-weight: bold;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.75rem;
+      width: 100%;
+      font-size: 1rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>房貸試算小工具</h1>
+
+  <label>房屋總價（元）</label>
+  <input type="number" id="totalPrice" placeholder="例如：20000000">
+
+  <label>自備款（元）</label>
+  <input type="number" id="downPayment" placeholder="例如：2400000">
+
+  <label>貸款年限（年）</label>
+  <input type="number" id="loanYears" placeholder="例如：30">
+
+  <label>年利率（%）</label>
+  <input type="number" id="interestRate" placeholder="例如：2.5" step="0.01">
+
+  <label>寬限期（年）</label>
+  <input type="number" id="gracePeriod" placeholder="例如：2">
+
+  <button onclick="calculateMortgage()">立即試算</button>
+
+  <div class="result" id="resultBox" style="display: none;">
+    <p id="graceMonthly"></p>
+    <p id="afterGraceMonthly"></p>
+  </div>
+
+  <script>
+    function calculateMortgage() {
+      const total = parseFloat(document.getElementById('totalPrice').value);
+      const down = parseFloat(document.getElementById('downPayment').value);
+      const years = parseFloat(document.getElementById('loanYears').value);
+      const rate = parseFloat(document.getElementById('interestRate').value) / 100;
+      const grace = parseFloat(document.getElementById('gracePeriod').value);
+
+      const loan = total - down;
+      const monthlyInterest = rate / 12;
+
+      // 寬限期：只繳利息
+      const gracePayment = loan * monthlyInterest;
+
+      // 寬限後：本金+利息
+      const n = (years - grace) * 12;
+      const afterGracePayment = loan * monthlyInterest / (1 - Math.pow(1 + monthlyInterest, -n));
+
+      document.getElementById('graceMonthly').innerText = `寬限期間每月繳款（僅利息）：NT$${Math.round(gracePayment).toLocaleString()}`;
+      document.getElementById('afterGraceMonthly').innerText = `寬限期後每月繳款（本息平均）：NT$${Math.round(afterGracePayment).toLocaleString()}`;
+      document.getElementById('resultBox').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
