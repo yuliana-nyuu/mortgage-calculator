@@ -2,20 +2,28 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>房貸試算小工具</title>
+  <title>房財筆記｜房貸試算小工具</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 2rem;
-      background: #f9f9f9;
-      color: #333;
+      background: #fdfaf7;
+      color: #4b3b2a;
       max-width: 600px;
       margin: auto;
     }
     h1 {
       text-align: center;
-      color: #2b2b2b;
+      color: #6e4b3a;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .logo img {
+      width: 80px;
+      height: auto;
     }
     label {
       display: block;
@@ -27,13 +35,15 @@
       padding: 0.5rem;
       font-size: 1rem;
       margin-top: 0.25rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
     .result {
       margin-top: 2rem;
       background: #fff;
       padding: 1rem;
       border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
     }
     .result p {
       margin: 0.5rem 0;
@@ -44,34 +54,37 @@
       padding: 0.75rem;
       width: 100%;
       font-size: 1rem;
-      background: #007bff;
+      background: #a38466;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
     button:hover {
-      background: #0056b3;
+      background: #8e6f52;
     }
   </style>
 </head>
 <body>
-  <h1>房貸試算小工具</h1>
+  <div class="logo">
+    <img src="https://i.imgur.com/Zc5c6Lt.png" alt="logo">
+  </div>
+  <h1>房財筆記｜房貸試算工具</h1>
 
-  <label>房屋總價（元）</label>
-  <input type="number" id="totalPrice" placeholder="例如：20000000">
+  <label>房屋總價（填入數字，單位：萬元）</label>
+  <input type="number" id="totalPrice" placeholder="例如：2000">
 
-  <label>自備款（元）</label>
-  <input type="number" id="downPayment" placeholder="例如：2400000">
+  <label>自備款（填入數字，單位：萬元）</label>
+  <input type="number" id="downPayment" placeholder="例如：240">
 
   <label>貸款年限（年）</label>
   <input type="number" id="loanYears" placeholder="例如：30">
 
-  <label>年利率（%）</label>
-  <input type="number" id="interestRate" placeholder="例如：2.5" step="0.01">
-
   <label>寬限期（年）</label>
   <input type="number" id="gracePeriod" placeholder="例如：2">
+
+  <label>年利率（%）</label>
+  <input type="number" id="interestRate" placeholder="例如：2.5" step="0.01">
 
   <button onclick="calculateMortgage()">立即試算</button>
 
@@ -82,8 +95,8 @@
 
   <script>
     function calculateMortgage() {
-      const total = parseFloat(document.getElementById('totalPrice').value);
-      const down = parseFloat(document.getElementById('downPayment').value);
+      const total = parseFloat(document.getElementById('totalPrice').value) * 10000;
+      const down = parseFloat(document.getElementById('downPayment').value) * 10000;
       const years = parseFloat(document.getElementById('loanYears').value);
       const rate = parseFloat(document.getElementById('interestRate').value) / 100;
       const grace = parseFloat(document.getElementById('gracePeriod').value);
@@ -91,10 +104,7 @@
       const loan = total - down;
       const monthlyInterest = rate / 12;
 
-      // 寬限期：只繳利息
       const gracePayment = loan * monthlyInterest;
-
-      // 寬限後：本金+利息
       const n = (years - grace) * 12;
       const afterGracePayment = loan * monthlyInterest / (1 - Math.pow(1 + monthlyInterest, -n));
 
