@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>房價負擔力試算｜房財筆記</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #fdfaf7;
+      color: #4b3b2a;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #6e4b3a;
+    }
+    .section {
+      margin-top: 2rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    select, input {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .result {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    }
+    .result p {
+      margin: 0.5rem 0;
+      font-weight: bold;
+    }
+    button {
+      margin-top: 2rem;
+      padding: 0.75rem;
+      width: 100%;
+      font-size: 1rem;
+      background: #a38466;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #8e6f52;
+    }
+  </style>
+</head>
+<body>
+  <h1>💰 房價負擔力試算</h1>
+  <p style="text-align:center; font-size: 0.9rem; color: #6e4b3a;">根據你的月收入、家庭開支比例與房貸條件，估算你可負擔的總房價</p>
+
+  <div class="section">
+    <label>你是？</label>
+    <select id="personType">
+      <option value="personal">個人（固定支出為收入 40%）</option>
+      <option value="family">家庭（固定支出為收入 60%）</option>
+    </select>
+
+    <label>月收入（元）</label>
+    <input type="number" id="monthlyIncome" placeholder="例如：50000">
+
+    <label>房貸利率（%）</label>
+    <input type="number" id="loanRate" placeholder="例如：2" step="0.01">
+
+    <label>貸款年限（年）</label>
+    <input type="number" id="loanYears" placeholder="例如：30">
+
+    <button onclick="calculateAffordability()">計算可負擔房價</button>
+
+    <div class="result" id="resultBox" style="display:none;">
+      <p id="availableLoan"></p>
+      <p id="estimatedTotalPrice"></p>
+    </div>
+  </div>
+
+  <script>
+    function calculateAffordability() {
+      const personType = document.getElementById('personType').value;
+      const income = parseFloat(document.getElementById('monthlyIncome').value);
+      const loanRate = parseFloat(document.getElementById('loanRate').value) / 100;
+      const years = parseFloat(document.getElementById('loanYears').value);
+
+      if (!income || !loanRate || !years) return;
+
+      const fixedRatio = personType === 'personal' ? 0.4 : 0.6;
+      const availableMonthly = income * (1 - fixedRatio);
+
+      // 月付 1 萬可貸款多少？用年利率 + 30 年試算的公式
+      const r = loanRate / 12;
+      const n = years * 12;
+      const monthlyPerMillion = 10000 * r / (1 - Math.pow(1 + r, -n));
+
+      const loanAffordable = availableMonthly * 1000000 / monthlyPerMillion;
+      const estimatedTotal = loanAffordable / 0.7; // 假設貸款 70%
+
+      document.getElementById('availableLoan').innerText = `📊 預估你可貸金額：約 NT$${Math.round(loanAffordable).toLocaleString()} 元`;
+      document.getElementById('estimatedTotalPrice').innerText = `🏠 推估可負擔總房價：約 NT$${Math.round(estimatedTotal).toLocaleString()} 元（含貸款＋自備）`;
+      document.getElementById('resultBox').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
