@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>房價負擔力試算｜房財筆記</title>
+  <title>房財筆記｜房價負擔力試算</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -58,11 +58,27 @@
     button:hover {
       background: #8e6f52;
     }
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      font-size: 0.9rem;
+      color: #6e4b3a;
+    }
+    .footer a {
+      display: block;
+      margin: 0.25rem 0;
+      color: #6e4b3a;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
   <h1>💰 房價負擔力試算</h1>
-  <p style="text-align:center; font-size: 0.9rem; color: #6e4b3a;">根據你的月收入、家庭開支比例與房貸條件，估算你可負擔的總房價</p>
+  <p style="text-align:center; font-size: 0.9rem; color: #6e4b3a;">👇 根據你的月收入、家庭開支比例與房貸條件，估算你可負擔的總房價</p>
+  <p style="text-align:center; font-size: 0.8rem; color: #999;">＊本試算結果僅供概算參考，實際金額依各銀行審核為準喔 👀</p>
 
   <div class="section">
     <label>你是？</label>
@@ -75,13 +91,16 @@
     <input type="number" id="monthlyIncome" placeholder="例如：50000">
 
     <label>房貸利率（%）</label>
-    <input type="number" id="loanRate" placeholder="例如：2" step="0.01">
+    <input type="number" id="loanRate" placeholder="例如：2.5" step="0.01">
+    <small style="font-size: 0.8rem; color: #888;">（2025.04 前實際申貸依照銀行公告，目前常見區間為 2.3%～2.9%）</small>
 
     <label>貸款年限（年）</label>
     <input type="number" id="loanYears" placeholder="例如：30">
+    <small style="font-size: 0.8rem; color: #888;">（免貸款為 0 年，最高貸款年限目前為 40 年）</small>
 
     <label>貸款成數（%）</label>
     <input type="number" id="loanRatePercent" placeholder="例如：70" value="70" step="1">
+    <small style="font-size: 0.8rem; color: #888;">（貸款成數最高為 80%）</small>
 
     <button onclick="calculateAffordability()">計算可負擔房價</button>
 
@@ -89,6 +108,14 @@
       <p id="availableLoan"></p>
       <p id="estimatedTotalPrice"></p>
     </div>
+  </div>
+
+  <div class="footer">
+    <p>Yuliana 喃喃 ｜房產・理財・生活</p>
+    <p>📬 聯絡我</p>
+    <a href="https://www.instagram.com/yuliana_nyuu/" target="_blank">IG</a>
+    <a href="https://nyuu.tw/" target="_blank">部落格</a>
+    <a href="https://lin.ee/daFLMHx" target="_blank">LINE</a>
   </div>
 
   <script>
@@ -117,3 +144,4 @@
   </script>
 </body>
 </html>
+
